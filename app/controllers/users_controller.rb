@@ -4,13 +4,25 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.all
+    if logged_in?
+      if admin?
+          @users = User.all
+      else
+        redirect_to root_path
+      end
+    else
+      redirect_to root_path
+    end
   end
 
   # GET /users/1
   # GET /users/1.json
   def show
-    @user = User.find(params[:id])
+    if logged_in?
+      @user = current_user#User.find(params[:id])
+    else
+      redirect_to root_path
+    end
     #debugger
   end
 
@@ -30,6 +42,7 @@ class UsersController < ApplicationController
 
     #respond_to do |format|
       if @user.save
+        log_in @user
         flash[:success] = "User was successfully created!"
         redirect_to @user
         #format.html { redirect_to @user, notice: 'User was successfully created.' }
