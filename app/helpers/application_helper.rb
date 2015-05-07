@@ -1,6 +1,6 @@
 module ApplicationHelper
 	def fullTitle(pageTitle='')
-		baseTitle="Ruby on Rails Tutorial Sample App"
+		baseTitle="Moorgoo Tutor"
 		if pageTitle.empty?
 			baseTitle
 		else
