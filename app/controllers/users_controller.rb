@@ -21,7 +21,8 @@ class UsersController < ApplicationController
     if logged_in?
       @user = current_user#User.find(params[:id])
     else
-      redirect_to root_path
+      flash[:danger] = "Please log in."
+      redirect_to login_path
     end
     #debugger
   end
@@ -33,6 +34,12 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    if logged_in?
+      @user = current_user
+    else
+      flash[:danger] = "Please log in."
+      redirect_to login_path
+    end
   end
 
   # POST /users
@@ -57,15 +64,19 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
-    respond_to do |format|
+    @user = User.find(params[:id])
+    #respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user }
+        flash[:success] = "Profile Updated"
+        redirect_to @user
+    #    format.html { redirect_to @user, notice: 'User was successfully updated.' }
+    #    format.json { render :show, status: :ok, location: @user }
       else
-        format.html { render :edit }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        render 'edit'
+    #    format.html { render :edit }
+    #    format.json { render json: @user.errors, status: :unprocessable_entity }
       end
-    end
+    #end
   end
 
   # DELETE /users/1
